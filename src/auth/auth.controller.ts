@@ -8,10 +8,10 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { LoginDto } from './dto/login.dto';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import { AuthService } from '@auth/auth.service';
+import { CreateUserDto } from '@user/dto/create-user.dto';
+import { LoginDto } from '@auth/dto/login.dto';
+import { AuthResponseDto } from '@auth/dto/auth-response.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')

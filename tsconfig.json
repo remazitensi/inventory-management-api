@@ -13,7 +13,8 @@
     "paths": {
       "@user/*": ["user/*"],
       "@common/*": ["common/*"],
-      "@config/*": ["config/*"]
+      "@config/*": ["config/*"],
+      "@auth/*": ["auth/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
