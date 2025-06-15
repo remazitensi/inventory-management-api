@@ -28,12 +28,20 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse;
+        errorCode = exception.constructor.name;
       } else if (
         typeof exceptionResponse === 'object' &&
         exceptionResponse !== null
       ) {
         const responseObj = exceptionResponse as any;
-        message = responseObj.message || responseObj.error || 'Unknown error';
+
+        // NestJS ValidationPipe에서 오는 경우: message가 배열일 수 있음
+        if (Array.isArray(responseObj.message)) {
+          message = responseObj.message.join(', ');
+        } else {
+          message = responseObj.message || responseObj.error || 'Unknown error';
+        }
+
         errorCode = responseObj.error || exception.constructor.name;
       }
     } else if (exception instanceof QueryFailedError) {
@@ -41,8 +49,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message = '데이터베이스 오류가 발생했습니다.';
       errorCode = 'DATABASE_ERROR';
 
-      // MySQL 중복 키 오류 처리
-      if (exception.message.includes('Duplicate entry')) {
+      // MySQL & PostgreSQL 중복 키 오류 감지
+      const lowerMsg = exception.message.toLowerCase();
+      if (
+        lowerMsg.includes('duplicate') ||
+        lowerMsg.includes('unique constraint')
+      ) {
         status = HttpStatus.CONFLICT;
         message = '이미 존재하는 데이터입니다.';
         errorCode = 'DUPLICATE_ENTRY';
@@ -52,14 +64,18 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       errorCode = exception.constructor.name;
     }
 
-    // 로그 기록
+    // 로그 기록 (개발 환경에서만 stack 표시)
+    const stack = exception instanceof Error ? exception.stack : '';
+    const isDev = process.env.NODE_ENV !== 'production';
+
     this.logger.error(
-      `HTTP ${status} Error: ${message}`,
-      exception instanceof Error ? exception.stack : 'Unknown error',
+      `🔥 HTTP ${status} Error - ${message}`,
+      isDev ? stack : undefined,
       `${request.method} ${request.url}`,
     );
 
     const errorResponse = {
+      success: false,
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
