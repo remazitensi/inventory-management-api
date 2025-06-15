@@ -5,9 +5,9 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserService } from '@user/user.service';
+import { CreateUserDto } from '@user/dto/create-user.dto';
+import { UserResponseDto } from '@user/dto/user-response.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 @Controller('users')
