@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { GlobalExceptionFilter } from '@common/filters/global-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalFilters(new GlobalExceptionFilter());
+
   // CORS 설정
   app.enableCors({
     origin: true,
@@ -22,9 +25,14 @@ async function bootstrap() {
 
   // Swagger 설정
   const config = new DocumentBuilder()
-    .setTitle('Authentication API')
-    .setDescription('회원가입 및 로그인 API 문서')
-    .setVersion('1.0')
+    .setTitle('재고 관리 시스템 API 개발')
+    .setDescription(
+      `- 회원가입과 로그인(JWT 활용) 기능 제공
+        - 제품 등록 기능 지원
+        - 유통기한 포함/미포함 재고 입출고 가능
+        - 보유 재고 페이지별 조회 기능
+        - 입출고 히스토리 조회 기능`,
+    )
     .addBearerAuth(
       {
         type: 'http',
@@ -43,8 +51,6 @@ async function bootstrap() {
   });
 
   await app.listen(3000);
-  console.log('Application is running on: http://localhost:3000');
-  console.log('Swagger documentation: http://localhost:3000/api');
 }
 
 bootstrap();
