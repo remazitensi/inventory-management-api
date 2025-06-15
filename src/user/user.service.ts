@@ -38,4 +38,11 @@ export class UserService {
   async findById(id: number): Promise<User | null> {
     return this.userRepository.findOneBy({ id });
   }
+
+  async validatePassword(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+  }
 }
