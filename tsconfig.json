@@ -14,7 +14,8 @@
       "@user/*": ["user/*"],
       "@common/*": ["common/*"],
       "@config/*": ["config/*"],
-      "@products/*": ["products/*"]
+      "@products/*": ["products/*"],
+      "@inventory/*": ["inventory/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
