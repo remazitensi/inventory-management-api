@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Inventory } from '../entities/inventory.entity';
+import { InventoryBalance } from '@inventory/entities/inventoryBalance.entitiy';
 
-export class PaginatedInventoryResponseDto {
-  @ApiProperty({ type: [Inventory], description: '재고 목록' })
-  items: Inventory[];
+export class PaginatedInventoryBalanceResponseDto {
+  @ApiProperty({ type: [InventoryBalance], description: '재고 상태 목록' })
+  items: InventoryBalance[];
 
   @ApiProperty({ example: 100, description: '총 개수' })
   total: number;
