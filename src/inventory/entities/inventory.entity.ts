@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
-  VersionColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Product } from '@products/entities/product.entity';
 
 export enum InventoryTransactionType {
   IN = 'IN', // 입고
@@ -15,17 +17,21 @@ export enum InventoryTransactionType {
 }
 
 @Entity('inventories')
-@Index(['productCode', 'lotNumber', 'expirationDate'])
-@Index(['productCode', 'expirationDate'])
+@Index(['productId', 'lotNumber', 'expirationDate'])
+@Index(['productId', 'expirationDate'])
 export class Inventory {
   @ApiProperty({ example: 1, description: '재고 ID' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ example: 'ZR001', description: '제품 코드' })
-  @Column({ type: 'varchar', length: 50 })
+  @ApiProperty({ example: 1, description: '제품 ID' })
+  @Column()
   @Index()
-  productCode: string;
+  productId: number;
+
+  @ManyToOne(() => Product)
+  @JoinColumn({ name: 'productId' })
+  product: Product;
 
   @ApiProperty({ example: 100, description: '현재 재고 수량' })
   @Column({ type: 'int', default: 0 })
@@ -79,8 +85,4 @@ export class Inventory {
   @ApiProperty({ description: '수정일시' })
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @ApiProperty({ description: '버전 (낙관적 락)' })
-  @VersionColumn()
-  version: number;
 }
