@@ -1,12 +1,24 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
+import { DataSource } from 'typeorm';
 
-export const typeOrmConfig: TypeOrmModuleOptions = {
-  type: 'mysql',
-  host: process.env.DB_HOST || 'localhost',
-  port: Number(process.env.DB_PORT) || 3306,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  autoLoadEntities: true,
-  synchronize: true,
+export const TypeOrmOptions: TypeOrmModuleAsyncOptions = {
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (configService: ConfigService) => ({
+    type: 'mysql',
+    host: configService.get<string>('DB_HOST', 'localhost'),
+    port: Number(configService.get<number>('DB_PORT', 3306)),
+    username: configService.get<string>('DB_USERNAME'),
+    password: configService.get<string>('DB_PASSWORD'),
+    database: configService.get<string>('DB_DATABASE'),
+    autoLoadEntities: true,
+    synchronize: true,
+    logging: true,
+  }),
+  async dataSourceFactory(options) {
+    if (!options) throw new Error('Invalid TypeORM options');
+    return addTransactionalDataSource(new DataSource(options));
+  },
 };
