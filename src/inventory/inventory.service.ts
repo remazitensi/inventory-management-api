@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
-import { Inventory } from '@inventory/entities/inventory.entity';
+import { Inventory } from './entities/inventory.entity';
 import { InventoryBalance } from '@inventory/entities/inventoryBalance.entitiy';
 import { Product } from '@products/entities/product.entity';
 

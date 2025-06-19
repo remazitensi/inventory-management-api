@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto, UpdateProductDto } from '@products/dto/product.dto';
-import { Product } from '@products/entities/product.entity';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductService {
@@ -63,14 +63,12 @@ export class ProductService {
         where: { code: dto.code },
       });
 
-      if (exists) {
+      if (exists && exists.id !== id) {
         throw new ConflictException('제품 코드가 이미 존재합니다.');
       }
     }
 
     Object.assign(product, dto);
-    product.updatedAt = new Date();
-
     return await this.productRepository.save(product);
   }
 
