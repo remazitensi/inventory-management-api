@@ -55,13 +55,13 @@ export class InventoryController {
 
   @Get()
   @ApiOperation({
-    summary: '재고 거래 내역 조회',
+    summary: '입출고 거래 히스토리 조회',
     description:
-      '페이지네이션과 필터링(제품 코드, 로트 번호, 유통기한 범위)을 통해 재고 거래 내역을 조회합니다.',
+      '제품별 입고 및 출고 거래 내역을 페이지네이션과 필터링을 통해 조회합니다.',
   })
   @ApiResponse({
     status: 200,
-    description: '재고 거래 내역 조회 성공',
+    description: '입출고 거래 내역 조회 성공',
     type: PaginatedInventoryBalanceResponseDto,
   })
   async findAll(
@@ -117,7 +117,7 @@ export class InventoryBalanceController {
   @ApiResponse({
     status: 200,
     description: '재고 상태 조회 성공',
-    type: InventoryBalance, // 재고 상태 엔티티 반환 타입
+    type: InventoryBalance,
   })
   async getBalance(
     @Param('productCode') productCode: string,
